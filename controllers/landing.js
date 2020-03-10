@@ -40,7 +40,6 @@ exports.show_edit_lead = function(req, res, next) {
 };
 
 exports.edit_lead = function(req, res, next) {
-
   return models.Lead.update(
     {
       email: req.body.lead_email
@@ -56,14 +55,21 @@ exports.edit_lead = function(req, res, next) {
 };
 
 exports.delete_lead = function(req, res, next) {
-
-  return models.Lead.destroy(
-    {
-      where: {
-        id: req.params.lead_id
-      }
+  return models.Lead.destroy({
+    where: {
+      id: req.params.lead_id
     }
-  ).then(result => {
+  }).then(result => {
     res.redirect("/leads");
+  });
+};
+
+exports.delete_lead_json = function(req, res, next) {
+  return models.Lead.destroy({
+    where: {
+      id: req.params.lead_id
+    }
+  }).then(result => {
+    res.send({ msg: "Success" });
   });
 };

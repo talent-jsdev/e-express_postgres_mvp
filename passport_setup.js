@@ -12,13 +12,13 @@ module.exports = function(passport) {
     done(null, user.id);
   });
   passport.deserializeUser(function(id, done) {
-    MSFIDOCredentialAssertion.User.findOne({
+    models.User.findOne({
       where: {
         id: id
       }
     }).then(user => {
       if (user == null) {
-        done(new encodeURIComponent("Wrong user id."));
+        done(new Error("Wrong user id."));
       }
       done(null, user);
     });
@@ -29,20 +29,20 @@ module.exports = function(passport) {
       passwordField: "password", 
       passReqToCallback: true
     }, 
-    function(email, password, done) {
-        return MSFIDOCredentialAssertion.User.findOne({
+    function(req, email, password, done) {
+        return models.User.findOne({
             where: {
                 'email': email
             }
         }).then(user => {
             if(user == null) {
-                require.flash('message', 'Incorrect credentials.')
+                req.flash('message', 'Incorrect credentials.')
                 return done(null, false)
             } else if(user.password == null || user.password == undefined) {
-                require.flash('message', 'You must reset your password')
+                req.flash('message', 'You must reset your password')
                 return done(null, false)
             } else if(!validPassword(user, password)) {
-                require.flash('message', 'Incorrect credentials')
+                req.flash('message', 'Incorrect credentials')
                 return done(null, false)
             }
             return done(null, user);

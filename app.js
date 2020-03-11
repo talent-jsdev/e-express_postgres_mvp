@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
 
 var logger = require('morgan');
 let passport = require('passport');
@@ -27,6 +28,7 @@ app.use(session({ secret: 'our new secret' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(flash());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
